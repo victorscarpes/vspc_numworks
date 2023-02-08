@@ -1,0 +1,3 @@
+.mypy_cache?
+Source/__pycache__/
+Minified/__pycache__/
