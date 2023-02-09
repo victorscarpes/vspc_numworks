@@ -1,3 +1,4 @@
+# optmize_ram
 import math as mt
 import cmath as cm
 from math import pi as _pi

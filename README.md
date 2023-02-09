@@ -8,9 +8,9 @@ To be able to fit the maximum ammount of scripts on the calculator, all source f
 
 To compress the files, run the `source_compressor.py` script at the root of the repo. The program will compress all `.py` files on the `Source/` directory and put the outputs on the `Minified/` directory.
 
-The compression of the file may reduce storage memory it uses but, as a consequence, may generate a script that use more RAM. If a given script is already at the calculator's limit, this may cause it to not run properly.
+### RAM optimization
 
-To control if RAM usage is unchanged, the comment `# keep_ram` can be included at the start of the file to force the compression not to create aditionnal variables, keeping RAM usage the same. A caveat of this is that this option has no control over the RAM usage of imported files. To make sure that everything works properly, I am going to experiment with it.
+Sometimes, when long literal expressions are used often, one way to reduce the size of the script is to assign those literals to a variable with a shor name and just usa that instead. This allows the file to use less characters. The problem is that now that literal is stored in RAM. If the program is already close to the RAM usage limit, the compression can render the script unusable. By default, this type of optmization is not done, but in cases where RAM is not an issue, including the comment `# optmize_ram` anywhere on the script will tell the compressor that this type of optimization can be done.
 
 ## Global variables naming convention
 

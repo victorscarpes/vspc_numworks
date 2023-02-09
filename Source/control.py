@@ -1,5 +1,3 @@
-# keep_ram
-
 import polynomial as pl
 import math as mt
 from math import pi

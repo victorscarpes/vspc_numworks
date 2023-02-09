@@ -1,5 +1,3 @@
-# keep_ram
-
 # This script draws a Mandelbrot fractal set
 # N_iteration: degree of precision
 import kandinsky
