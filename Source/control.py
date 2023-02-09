@@ -16,17 +16,17 @@ stab()
 
 import polynomial as pl
 import math as mt
+from math import pi
 from cmath import phase
 import sig_fig as sf
 import matplotlib.pyplot as plt
 
-pi = mt.pi
 
-(a1, a2, b1, b2, c1, c2, d1, d2) = (0, 0, 0, 0, 0, 0, 0, 0)
+(_a1, _a2, _b1, _b2, _c1, _c2, _d1, _d2) = (0, 0, 0, 0, 0, 0, 0, 0)
 
-freqs = []
-poles = []
-zeros = []
+_freqs = []
+_poles = []
+_zeros = []
 
 
 def _H(p: complex) -> complex:
@@ -41,29 +41,29 @@ def _H(p: complex) -> complex:
     """
 
     numerator = 0
-    if (a1, b1, c1) == (0, 0, 0):
-        numerator = d1
-    elif (a1, b1) == (0, 0):
-        numerator = c1
-    elif a1 == 0:
-        numerator = b1
+    if (_a1, _b1, _c1) == (0, 0, 0):
+        numerator = _d1
+    elif (_a1, _b1) == (0, 0):
+        numerator = _c1
+    elif _a1 == 0:
+        numerator = _b1
     else:
-        numerator = a1
+        numerator = _a1
 
     denominator = 0
-    if (a2, b2, c2) == (0, 0, 0):
-        denominator = d2
-    elif (a2, b2) == (0, 0):
-        denominator = c2
-    elif a2 == 0:
-        denominator = b2
+    if (_a2, _b2, _c2) == (0, 0, 0):
+        denominator = _d2
+    elif (_a2, _b2) == (0, 0):
+        denominator = _c2
+    elif _a2 == 0:
+        denominator = _b2
     else:
-        denominator = a2
+        denominator = _a2
 
-    for _p in zeros:
+    for _p in _zeros:
         numerator = numerator*(p - _p)
 
-    for _p in poles:
+    for _p in _poles:
         denominator = denominator*(p - _p)
 
     return numerator/denominator
@@ -171,42 +171,42 @@ def coeffs() -> None:
     Function that changes the global variables representing the linear system in question.
     """
 
-    global a1, b1, c1, d1
-    global a2, b2, c2, d2
-    global freqs
-    global poles, zeros
+    global _a1, _b1, _c1, _d1
+    global _a2, _b2, _c2, _d2
+    global _freqs
+    global _poles, _zeros
     global H
 
     print("Enter numerator coefficients")
     print("ap^3+bp^2+cp+d")
-    a1 = float(input("a = "))
-    b1 = float(input("b = "))
-    c1 = float(input("c = "))
-    d1 = float(input("d = "))
+    _a1 = float(input("a = "))
+    _b1 = float(input("b = "))
+    _c1 = float(input("c = "))
+    _d1 = float(input("d = "))
 
     print("\nEnter denominator coefficients")
     print("ap^3+bp^2+cp+d")
-    a2 = float(input("a = "))
-    b2 = float(input("b = "))
-    c2 = float(input("c = "))
-    d2 = float(input("d = "))
+    _a2 = float(input("a = "))
+    _b2 = float(input("b = "))
+    _c2 = float(input("c = "))
+    _d2 = float(input("d = "))
 
-    zeros = list(pl._cubic(a1, b1, c1, d1))
-    poles = list(pl._cubic(a2, b2, c2, d2))
+    _zeros = list(pl._cubic(_a1, _b1, _c1, _d1))
+    _poles = list(pl._cubic(_a2, _b2, _c2, _d2))
 
-    for p in poles[:]:
-        for z in zeros[:]:
+    for p in _poles[:]:
+        for z in _zeros[:]:
             if _is_equal(p, z):
-                poles.remove(p)
-                zeros.remove(z)
+                _poles.remove(p)
+                _zeros.remove(z)
 
-    freqs = []
+    _freqs = []
 
-    for p in poles+zeros:
+    for p in _poles + _zeros:
         f = abs(p/(2*pi))
-        freqs.append(f)
+        _freqs.append(f)
 
-    freqs.sort()
+    _freqs.sort()
 
 
 def pole_values() -> None:
@@ -215,12 +215,12 @@ def pole_values() -> None:
     """
 
     print(43*"-")
-    if len(poles) == 0:
+    if len(_poles) == 0:
         print("No poles")
     else:
         print("Poles:")
         i = 1
-        for p in poles:
+        for p in _poles:
             f = abs(p/(2*pi))
             m = -mt.cos(phase(p))
             Q = 1/(2*m)
@@ -231,12 +231,12 @@ def pole_values() -> None:
             i += 1
 
     print(43*"-")
-    if len(zeros) == 0:
+    if len(_zeros) == 0:
         print("No zeros")
     else:
         print("Zeros:")
         i = 1
-        for p in zeros:
+        for p in _zeros:
             f = abs(p/(2*pi))
             m = -mt.cos(phase(p))
             Q = 1/(2*m)
@@ -249,7 +249,7 @@ def pole_values() -> None:
     print(43*"-")
     print("Corner frequencies:\n")
     i = 1
-    for f in freqs:
+    for f in _freqs:
         print("f"+str(i)+" = "+sf._round_eng(f, unit="Hz"))
         i += 1
 
@@ -262,16 +262,16 @@ def root_locust_plot() -> None:
     xmax = 0
     ymax = 0
 
-    if len(poles) != 0:
-        x_poles = [pl._real(p) for p in poles]
-        y_poles = [pl._imag(p) for p in poles]
+    if len(_poles) != 0:
+        x_poles = [pl._real(p) for p in _poles]
+        y_poles = [pl._imag(p) for p in _poles]
         xmax = max([xmax]+[abs(x) for x in x_poles])
         ymax = max([ymax]+[abs(y) for y in y_poles])
         plt.scatter(x_poles, y_poles, color="orange")
 
-    if len(zeros) != 0:
-        x_zeros = [pl._real(p) for p in zeros]
-        y_zeros = [pl._imag(p) for p in zeros]
+    if len(_zeros) != 0:
+        x_zeros = [pl._real(p) for p in _zeros]
+        y_zeros = [pl._imag(p) for p in _zeros]
         xmax = max([xmax]+[abs(x) for x in x_zeros])
         ymax = max([ymax]+[abs(y) for y in y_zeros])
         plt.scatter(x_zeros, y_zeros, color="blue")
@@ -303,10 +303,10 @@ def mag_plot(fmin: int | float = 0, fmax: int | float = 0) -> None:
     while N > 0:
         try:
             if fmin <= 0 or fmax <= 0 or fmax <= fmin:
-                _freqs = (f for f in freqs if f != 0)
+                _freqs = (f for f in _freqs if f != 0)
                 xmin = mt.log10(min(_freqs)/100)
 
-                _freqs = (f for f in freqs if f != 0)
+                _freqs = (f for f in _freqs if f != 0)
                 xmax = mt.log10(max(_freqs)*100)
             else:
                 xmin = mt.log10(fmin)
@@ -350,10 +350,10 @@ def phase_plot(fmin: int | float = 0, fmax: int | float = 0) -> None:
     while N > 0:
         try:
             if fmin <= 0 or fmax <= 0 or fmax <= fmin:
-                _freqs = (f for f in freqs if f != 0)
+                _freqs = (f for f in _freqs if f != 0)
                 xmin = mt.log10(min(_freqs)/100)
 
-                _freqs = (f for f in freqs if f != 0)
+                _freqs = (f for f in _freqs if f != 0)
                 xmax = mt.log10(max(_freqs)*100)
             else:
                 xmin = mt.log10(fmin)
@@ -396,10 +396,10 @@ def nyquist_plot(fmin: int | float = 0, fmax: int | float = 0) -> None:
     while N > 0:
         try:
             if fmin <= 0 or fmax <= 0 or fmax <= fmin:
-                _freqs = (f for f in freqs if f != 0)
+                _freqs = (f for f in _freqs if f != 0)
                 xmin = mt.log10(min(_freqs)/100)
 
-                _freqs = (f for f in freqs if f != 0)
+                _freqs = (f for f in _freqs if f != 0)
                 xmax = mt.log10(max(_freqs)*100)
             else:
                 xmin = mt.log10(fmin)
@@ -443,10 +443,10 @@ def nichols_plot(fmin: int | float = 0, fmax: int | float = 0) -> None:
     while N > 0:
         try:
             if fmin <= 0 or fmax <= 0 or fmax <= fmin:
-                _freqs = (f for f in freqs if f != 0)
+                _freqs = (f for f in _freqs if f != 0)
                 xmin = mt.log10(min(_freqs)/100)
 
-                _freqs = (f for f in freqs if f != 0)
+                _freqs = (f for f in _freqs if f != 0)
                 xmax = mt.log10(max(_freqs)*100)
             else:
                 xmin = mt.log10(fmin)
@@ -494,7 +494,7 @@ def stab(tol: float = 0.0001, iter: int = 500) -> None:
         iter (int, optional): Maximum number of iterations. Defaults to 500.
     """
 
-    fmin = min(freqs)/100
+    fmin = min(_freqs)/100
     if fmin == 0:
         fmin = 1
     fmax = 100*fmin
@@ -560,7 +560,7 @@ def stab(tol: float = 0.0001, iter: int = 500) -> None:
 
     f_0dB = fmin
 
-    fmin = min(freqs)/100
+    fmin = min(_freqs)/100
     if fmin == 0:
         fmin = 1
     fmax = 100*fmin

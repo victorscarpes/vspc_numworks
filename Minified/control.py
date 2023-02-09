@@ -4,26 +4,26 @@ _C='blue'
 _B='Hz'
 _A='-'
 import polynomial as pl,math as mt
+from math import pi
 from cmath import phase
 import sig_fig as sf,matplotlib.pyplot as plt
-pi=mt.pi
-a1,a2,b1,b2,c1,c2,d1,d2=0,0,0,0,0,0,0,0
-freqs=[]
-poles=[]
-zeros=[]
+_a1,_a2,_b1,_b2,_c1,_c2,_d1,_d2=0,0,0,0,0,0,0,0
+_freqs=[]
+_poles=[]
+_zeros=[]
 def _H(p):
 	A=0
-	if(a1,b1,c1)==(0,0,0):A=d1
-	elif(a1,b1)==(0,0):A=c1
-	elif a1==0:A=b1
-	else:A=a1
+	if(_a1,_b1,_c1)==(0,0,0):A=_d1
+	elif(_a1,_b1)==(0,0):A=_c1
+	elif _a1==0:A=_b1
+	else:A=_a1
 	B=0
-	if(a2,b2,c2)==(0,0,0):B=d2
-	elif(a2,b2)==(0,0):B=c2
-	elif a2==0:B=b2
-	else:B=a2
-	for C in zeros:A=A*(p-C)
-	for C in poles:B=B*(p-C)
+	if(_a2,_b2,_c2)==(0,0,0):B=_d2
+	elif(_a2,_b2)==(0,0):B=_c2
+	elif _a2==0:B=_b2
+	else:B=_a2
+	for C in _zeros:A=A*(p-C)
+	for C in _poles:B=B*(p-C)
 	return A/B
 def H(f):
 	B=_H(complex(0,2*pi*f));A=phase(B)*180/pi;print(43*_A)
@@ -51,85 +51,85 @@ def _is_equal(z1,z2,n=5):
 	if H!=0:X=mt.floor(mt.log10(abs(H)));P=H/10**X;P=round(P,n-1);H=P*10**X
 	return(A,B)==(E,F)or(C,D)==(G,H)
 def coeffs():
-	G='d = ';F='c = ';E='b = ';D='a = ';C='ap^3+bp^2+cp+d';global a1,b1,c1,d1;global a2,b2,c2,d2;global freqs;global poles,zeros;global H;print('Enter numerator coefficients');print(C);a1=float(input(D));b1=float(input(E));c1=float(input(F));d1=float(input(G));print('\nEnter denominator coefficients');print(C);a2=float(input(D));b2=float(input(E));c2=float(input(F));d2=float(input(G));zeros=list(pl._cubic(a1,b1,c1,d1));poles=list(pl._cubic(a2,b2,c2,d2))
-	for A in poles[:]:
-		for B in zeros[:]:
-			if _is_equal(A,B):poles.remove(A);zeros.remove(B)
-	freqs=[]
-	for A in poles+zeros:I=abs(A/(2*pi));freqs.append(I)
-	freqs.sort()
+	G='d = ';F='c = ';E='b = ';D='a = ';C='ap^3+bp^2+cp+d';global _a1,_b1,_c1,_d1;global _a2,_b2,_c2,_d2;global _freqs;global _poles,_zeros;global H;print('Enter numerator coefficients');print(C);_a1=float(input(D));_b1=float(input(E));_c1=float(input(F));_d1=float(input(G));print('\nEnter denominator coefficients');print(C);_a2=float(input(D));_b2=float(input(E));_c2=float(input(F));_d2=float(input(G));_zeros=list(pl._cubic(_a1,_b1,_c1,_d1));_poles=list(pl._cubic(_a2,_b2,_c2,_d2))
+	for A in _poles[:]:
+		for B in _zeros[:]:
+			if _is_equal(A,B):_poles.remove(A);_zeros.remove(B)
+	_freqs=[]
+	for A in _poles+_zeros:I=abs(A/(2*pi));_freqs.append(I)
+	_freqs.sort()
 def pole_values():
 	H='\np';G='f';B=' = ';print(43*_A)
-	if len(poles)==0:print('No poles')
+	if len(_poles)==0:print('No poles')
 	else:
 		print('Poles:');A=1
-		for C in poles:D=abs(C/(2*pi));E=-mt.cos(phase(C));F=1/(2*E);print(H+str(A)+B+sf._complex_round_fix(C));print(G+str(A)+B+sf._round_eng(D,unit=_B));print('m'+str(A)+B+sf._round_sci(E));print('Q'+str(A)+B+sf._round_sci(F));A+=1
+		for C in _poles:D=abs(C/(2*pi));E=-mt.cos(phase(C));F=1/(2*E);print(H+str(A)+B+sf._complex_round_fix(C));print(G+str(A)+B+sf._round_eng(D,unit=_B));print('m'+str(A)+B+sf._round_sci(E));print('Q'+str(A)+B+sf._round_sci(F));A+=1
 	print(43*_A)
-	if len(zeros)==0:print('No zeros')
+	if len(_zeros)==0:print('No zeros')
 	else:
 		print('Zeros:');A=1
-		for C in zeros:D=abs(C/(2*pi));E=-mt.cos(phase(C));F=1/(2*E);print(H+str(A)+B+sf._complex_round_fix(C));print(G+str(A)+B+sf._round_eng(D,unit=_B));print('m'+str(A)+B+sf._round_sci(E));print('Q'+str(A)+B+sf._round_sci(F));A+=1
+		for C in _zeros:D=abs(C/(2*pi));E=-mt.cos(phase(C));F=1/(2*E);print(H+str(A)+B+sf._complex_round_fix(C));print(G+str(A)+B+sf._round_eng(D,unit=_B));print('m'+str(A)+B+sf._round_sci(E));print('Q'+str(A)+B+sf._round_sci(F));A+=1
 	print(43*_A);print('Corner frequencies:\n');A=1
-	for D in freqs:print(G+str(A)+B+sf._round_eng(D,unit=_B));A+=1
+	for D in _freqs:print(G+str(A)+B+sf._round_eng(D,unit=_B));A+=1
 def root_locust_plot():
 	A=0;B=0
-	if len(poles)!=0:C=[pl._real(A)for A in poles];D=[pl._imag(A)for A in poles];A=max([A]+[abs(A)for A in C]);B=max([B]+[abs(A)for A in D]);plt.scatter(C,D,color='orange')
-	if len(zeros)!=0:E=[pl._real(A)for A in zeros];F=[pl._imag(A)for A in zeros];A=max([A]+[abs(A)for A in E]);B=max([B]+[abs(A)for A in F]);plt.scatter(E,F,color=_C)
+	if len(_poles)!=0:C=[pl._real(A)for A in _poles];D=[pl._imag(A)for A in _poles];A=max([A]+[abs(A)for A in C]);B=max([B]+[abs(A)for A in D]);plt.scatter(C,D,color='orange')
+	if len(_zeros)!=0:E=[pl._real(A)for A in _zeros];F=[pl._imag(A)for A in _zeros];A=max([A]+[abs(A)for A in E]);B=max([B]+[abs(A)for A in F]);plt.scatter(E,F,color=_C)
 	if A==0:A=1
 	else:A*=1.1
 	if B==0:B=1
 	else:B*=1.1
 	plt.axis((-A,A,-B,B));plt.show()
 def mag_plot(fmin=0,fmax=0):
-	C=fmax;B=fmin;A=500
-	while A>0:
+	D=fmax;C=fmin;B=500
+	while B>0:
 		try:
-			if B<=0 or C<=0 or C<=B:D=(A for A in freqs if A!=0);E=mt.log10(min(D)/100);D=(A for A in freqs if A!=0);G=mt.log10(max(D)*100)
-			else:E=mt.log10(B);G=mt.log10(C)
-			J=G-E;H=[J*B/(A-1)+E for B in range(A)];K=(complex(0,2*pi*10**A)for A in H);F=[]
+			if C<=0 or D<=0 or D<=C:A=(B for B in A if B!=0);E=mt.log10(min(A)/100);A=(B for B in A if B!=0);G=mt.log10(max(A)*100)
+			else:E=mt.log10(C);G=mt.log10(D)
+			J=G-E;H=[J*A/(B-1)+E for A in range(B)];K=(complex(0,2*pi*10**A)for A in H);F=[]
 			for I in K:
 				try:F.append(20*mt.log10(abs(_H(I))))
 				except:F.append(20*mt.log10(abs(_H(I+complex(0,1e-10)))))
 			plt.plot(H,F,color=_C);break
-		except:A-=10
+		except:B-=10
 	else:print(_E);return
 	plt.show()
 def phase_plot(fmin=0,fmax=0):
-	D=fmax;C=fmin;A=500
+	E=fmax;D=fmin;A=500
 	while A>0:
 		try:
-			if C<=0 or D<=0 or D<=C:E=(A for A in freqs if A!=0);F=mt.log10(min(E)/100);E=(A for A in freqs if A!=0);I=mt.log10(max(E)*100)
-			else:F=mt.log10(C);I=mt.log10(D)
-			K=I-F;J=[K*B/(A-1)+F for B in range(A)];L=(complex(0,2*pi*10**A)for A in J);B=[phase(_H(A))*180/pi for A in L]
+			if D<=0 or E<=0 or E<=D:B=(A for A in B if A!=0);F=mt.log10(min(B)/100);B=(A for A in B if A!=0);I=mt.log10(max(B)*100)
+			else:F=mt.log10(D);I=mt.log10(E)
+			K=I-F;J=[K*B/(A-1)+F for B in range(A)];L=(complex(0,2*pi*10**A)for A in J);C=[phase(_H(A))*180/pi for A in L]
 			for G in range(1,A):
-				H=B[G]-B[G-1]
-				if abs(H)>150:B[G]-=mt.copysign(mt.ceil(abs(H)/180)*180,H)
-			plt.plot(J,B,color=_C);break
+				H=C[G]-C[G-1]
+				if abs(H)>150:C[G]-=mt.copysign(mt.ceil(abs(H)/180)*180,H)
+			plt.plot(J,C,color=_C);break
 		except:A-=10
 	else:print(_E);return
 	plt.show()
 def nyquist_plot(fmin=0,fmax=0):
-	C=fmax;B=fmin;A=500
-	while A>0:
+	D=fmax;C=fmin;B=500
+	while B>0:
 		try:
-			if B<=0 or C<=0 or C<=B:D=(A for A in freqs if A!=0);E=mt.log10(min(D)/100);D=(A for A in freqs if A!=0);F=mt.log10(max(D)*100)
-			else:E=mt.log10(B);F=mt.log10(C)
-			J=F-E;K=[J*B/(A-1)+E for B in range(A)];L=(complex(0,2*pi*10**A)for A in K);G=[];H=[]
+			if C<=0 or D<=0 or D<=C:A=(B for B in A if B!=0);E=mt.log10(min(A)/100);A=(B for B in A if B!=0);F=mt.log10(max(A)*100)
+			else:E=mt.log10(C);F=mt.log10(D)
+			J=F-E;K=[J*A/(B-1)+E for A in range(B)];L=(complex(0,2*pi*10**A)for A in K);G=[];H=[]
 			for I in L:G.append(pl._real(_H(I)));H.append(pl._imag(_H(I)))
 			plt.scatter(-1,0,color='black');plt.plot(G,H,color=_C);break
-		except:A-=10
+		except:B-=10
 	else:print(_E);return
 	plt.show()
 def nichols_plot(fmin=0,fmax=0):
-	E=fmax;D=fmin;B=500
+	F=fmax;E=fmin;B=500
 	while B>0:
 		try:
-			if D<=0 or E<=0 or E<=D:F=(A for A in freqs if A!=0);G=mt.log10(min(F)/100);F=(A for A in freqs if A!=0);K=mt.log10(max(F)*100)
-			else:G=mt.log10(D);K=mt.log10(E)
+			if E<=0 or F<=0 or F<=E:C=(A for A in C if A!=0);G=mt.log10(min(C)/100);C=(A for A in C if A!=0);K=mt.log10(max(C)*100)
+			else:G=mt.log10(E);K=mt.log10(F)
 			L=K-G;M=[L*A/(B-1)+G for A in range(B)];N=(complex(0,2*pi*10**A)for A in M);A=[];H=[]
-			for C in N:
-				try:H.append(20*mt.log10(abs(_H(C))));A.append(phase(_H(C))*180/pi)
-				except:H.append(20*mt.log10(abs(_H(C+complex(0,1e-10)))));A.append(phase(_H(C+complex(0,1e-10)))*180/pi)
+			for D in N:
+				try:H.append(20*mt.log10(abs(_H(D))));A.append(phase(_H(D))*180/pi)
+				except:H.append(20*mt.log10(abs(_H(D+complex(0,1e-10)))));A.append(phase(_H(D+complex(0,1e-10)))*180/pi)
 			for I in range(1,B):
 				J=A[I]-A[I-1]
 				if abs(J)>150:A[I]-=mt.copysign(mt.ceil(abs(J)/180)*180,J)
@@ -138,7 +138,7 @@ def nichols_plot(fmin=0,fmax=0):
 	else:print(_E);return
 	plt.show()
 def stab(tol=0.0001,iter=500):
-	P='Phase margin: ';K='Not able to find margins';A=min(freqs)/100
+	P='Phase margin: ';K='Not able to find margins';A=min(_freqs)/100
 	if A==0:A=1
 	B=100*A;C=mt.sqrt(A*B);H=abs(_H(complex(0,2*pi*A)));I=abs(_H(complex(0,2*pi*C)));J=abs(_H(complex(0,2*pi*B)));D=0
 	while H>1 and J>1:
@@ -157,7 +157,7 @@ def stab(tol=0.0001,iter=500):
 		elif I<1 and J>1:A=C
 		elif H<1 and I>1:B=C
 		D+=1
-	N=A;A=min(freqs)/100
+	N=A;A=min(_freqs)/100
 	if A==0:A=1
 	B=100*A;C=mt.sqrt(A*B);E=phase(_H(complex(0,2*pi*A)))
 	if E>=0:E-=2*pi
