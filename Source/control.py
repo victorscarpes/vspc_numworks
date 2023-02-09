@@ -1,18 +1,4 @@
-"""
-This module is meant to implement functions to vizualize plots, poles and zeros and corner frequencies of a transfer function H(p) on the Laplace domain. After importing the module, the coeffs() function is automatically run to define the transfer function. All other functions are meant to be called on a python terminal on the Numworks calculator, but should work on regular python 3.
-
-The functions intended for the user defined on this module are the following:
-
-coeffs()
-H(f)
-pole_values()
-root_locust_plot()
-mag_plot()
-phase_plot()
-nyquist_plot()
-nichols_plot()
-stab()
-"""
+# keep_ram
 
 import polynomial as pl
 import math as mt

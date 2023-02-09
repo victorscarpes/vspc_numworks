@@ -4,7 +4,13 @@ This repository is my personal collection of python scripts for the Numworks gra
 
 ## Source compression
 
-To be able to fit the maximum ammount of scripts on the calculator, all source files are refactored to minimize the ammount of characters on the files using the `python-minifier` library (available [here](https://dflook.github.io/python-minifier/)). To compress the files, run the `source_compressor.py` script at the root of the repo. The program will compress all `.py` files on the `Source/` directory and put the outputs on the `Minified/` directory.
+To be able to fit the maximum ammount of scripts on the calculator, all source files are refactored to minimize the ammount of characters on the files using the `python-minifier` library (available [here](https://dflook.github.io/python-minifier/)).
+
+To compress the files, run the `source_compressor.py` script at the root of the repo. The program will compress all `.py` files on the `Source/` directory and put the outputs on the `Minified/` directory.
+
+The compression of the file may reduce storage memory it uses but, as a consequence, may generate a script that use more RAM. If a given script is already at the calculator's limit, this may cause it to not run properly.
+
+To control if RAM usage is unchanged, the comment `# keep_ram` can be included at the start of the file to force the compression not to create aditionnal variables, keeping RAM usage the same. A caveat of this is that this option has no control over the RAM usage of imported files. To make sure that everything works properly, I am going to experiment with it.
 
 ## Global variables naming convention
 

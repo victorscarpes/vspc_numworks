@@ -1,15 +1,3 @@
-"""
-This module is meant to implement functions to solve polynomial equations up to third degree and auxiliary functions that operate on complex numbers.
-
-The functions defined on this module are the following:
-
-imag(z)
-real(z)
-linear(a, b)
-quadratic(a, b, c)
-cubic(a, b, c, d)
-"""
-
 import cmath as cm
 import math as mt
 

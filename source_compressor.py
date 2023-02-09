@@ -3,14 +3,14 @@ from python_minifier import minify
 import os
 
 
-def numworks_minify(source: str, filename: str) -> str:
+def numworks_minify(source: str, filename: str, keep_ram: bool) -> str:
     return minify(source=source,
                   filename=filename,
                   remove_annotations=True,
                   remove_pass=True,
                   remove_literal_statements=True,
                   combine_imports=True,
-                  hoist_literals=True,
+                  hoist_literals=not keep_ram,
                   rename_locals=True,
                   rename_globals=False,
                   remove_object_base=True,
@@ -35,8 +35,13 @@ for file_name in os.listdir("Source"):
         source = source_file.read()
         source_file.close()
 
+        if "keep_ram" in source:
+            keep_ram = True
+        else:
+            keep_ram = False
+
         minified_path = "Minified\\"+file_name
-        minified_source = numworks_minify(source, file_name)
+        minified_source = numworks_minify(source, file_name, keep_ram)
         minified_file = open(minified_path, "w")
         minified_file.write(minified_source)
         minified_file.close()
