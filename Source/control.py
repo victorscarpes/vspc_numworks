@@ -13,12 +13,12 @@ _poles = []
 _zeros = []
 
 
-def _H(p: complex) -> complex:
+def _H(p: int | float | complex) -> complex:
     """
     Calculates the transfer function at a given p value.
 
     Args:
-        p (complex): Laplace variable.
+        p (int | float | complex): Laplace variable.
 
     Returns:
         complex: Transfer function calculated on the given p value.
@@ -53,38 +53,38 @@ def _H(p: complex) -> complex:
     return numerator/denominator
 
 
-def H(f: float) -> None:
+def H(f: int | float) -> None:
     """
     Calculates the transfer function at a given real frequency and prints the magnitude in dB and phase in degrees.
 
     Args:
-        f (float): Input frequency.
+        f (int | float): Input frequency.
     """
 
-    z = _H(complex(0, 2*pi*f))
+    z = _H(2*pi*f)
     phi = phase(z)*180/pi
 
     print(43*"-")
     try:
         G = 20*mt.log10(abs(z))
-        print(sf._round_eng(G, unit="dB"))
+        print(sf._round_fix(G, unit="dB"))
     except:
         print("-inf dB")
 
     if abs(phi) < 1:
-        print(sf._round_sci(phi, unit="deg"))
+        print(sf._round_fix(phi, unit="deg"))
     else:
-        print(sf._round_eng(phi, unit="deg"))
+        print(sf._round_fix(phi, unit="deg"))
     print(43*"-")
 
 
-def _is_equal(z1: complex, z2: complex, n: int = 5) -> bool:
+def _is_equal(z1: int | float | complex, z2: int | float | complex, n: int = 5) -> bool:
     """
     Verify if two complex numbers are equal up to a given tolerance. Returns true if both real and imaginary parts are withing tolerance and/or both magnitude and phase are withing tolerance. To check if any 2 numbers are withing tolerance, truncates both values up to n significant figures and check if they are equal.
 
     Args:
-        z1 (complex): First complex number.
-        z2 (complex): Second complex number.
+        z1 (int | float | complex): First complex number.
+        z2 (int | float | complex): Second complex number.
         n (int, optional): Significant figures for tolerance checking. Defaults to 5.
 
     Returns:
@@ -159,7 +159,6 @@ def coeffs() -> None:
     global _a2, _b2, _c2, _d2
     global _freqs
     global _poles, _zeros
-    global H
 
     print("Enter numerator coefficients")
     print("ap^3+bp^2+cp+d")
@@ -203,39 +202,27 @@ def pole_values() -> None:
         print("No poles")
     else:
         print("Poles:")
-        i = 1
-        for p in _poles:
-            f = abs(p/(2*pi))
-            m = -mt.cos(phase(p))
-            Q = 1/(2*m)
-            print("\np"+str(i)+" = "+sf._complex_round_fix(p))
-            print("f"+str(i)+" = "+sf._round_eng(f, unit="Hz"))
-            print("m"+str(i)+" = "+sf._round_sci(m))
-            print("Q"+str(i)+" = "+sf._round_sci(Q))
-            i += 1
+        for i in range(len(_poles)):
+            print("\np"+str(i+1)+" = "+sf._complex_round_fix(_poles[i]))
+            print("f"+str(i+1)+" = "+sf._round_eng(abs(_poles[i]/(2*pi)), unit="Hz"))
+            print("m"+str(i+1)+" = "+sf._round_fix(-mt.cos(phase(_poles[i]))))
+            print("Q"+str(i+1)+" = "+sf._round_fix(-1/(2*mt.cos(phase(_poles[i])))))
 
     print(43*"-")
     if len(_zeros) == 0:
         print("No zeros")
     else:
         print("Zeros:")
-        i = 1
-        for p in _zeros:
-            f = abs(p/(2*pi))
-            m = -mt.cos(phase(p))
-            Q = 1/(2*m)
-            print("\np"+str(i)+" = "+sf._complex_round_fix(p))
-            print("f"+str(i)+" = "+sf._round_eng(f, unit="Hz"))
-            print("m"+str(i)+" = "+sf._round_sci(m))
-            print("Q"+str(i)+" = "+sf._round_sci(Q))
-            i += 1
+        for i in range(len(_zeros)):
+            print("\nz"+str(i+1)+" = "+sf._complex_round_fix(_zeros[i]))
+            print("f"+str(i+1)+" = "+sf._round_eng(abs(_zeros[i]/(2*pi)), unit="Hz"))
+            print("m"+str(i+1)+" = "+sf._round_fix(-mt.cos(phase(_zeros[i]))))
+            print("Q"+str(i+1)+" = "+sf._round_fix(-1/(2*mt.cos(phase(_zeros[i])))))
 
     print(43*"-")
     print("Corner frequencies:\n")
-    i = 1
-    for f in _freqs:
-        print("f"+str(i)+" = "+sf._round_eng(f, unit="Hz"))
-        i += 1
+    for i in range(len(_freqs)):
+        print("f"+str(i+1)+" = "+sf._round_eng(_freqs[i], unit="Hz"))
 
 
 def root_locust_plot() -> None:
@@ -299,7 +286,7 @@ def mag_plot(fmin: int | float = 0, fmax: int | float = 0) -> None:
             delta_dec = xmax - xmin
 
             x_list = [delta_dec*i/(N-1) + xmin for i in range(N)]
-            p_list = (complex(0, 2*pi*(10**x)) for x in x_list)
+            p_list = (2*pi*(10**x) for x in x_list)
 
             mag_list = []
 
@@ -307,7 +294,7 @@ def mag_plot(fmin: int | float = 0, fmax: int | float = 0) -> None:
                 try:
                     mag_list.append(20*mt.log10(abs(_H(p))))
                 except:
-                    mag_list.append(20*mt.log10(abs(_H(p+complex(0, 1e-10)))))
+                    mag_list.append(20*mt.log10(abs(_H(p+1e-10))))
 
             plt.plot(x_list, mag_list, color="blue")
             break
@@ -346,7 +333,7 @@ def phase_plot(fmin: int | float = 0, fmax: int | float = 0) -> None:
             delta_dec = xmax - xmin
 
             x_list = [delta_dec*i/(N-1) + xmin for i in range(N)]
-            p_list = (complex(0, 2*pi*(10**x)) for x in x_list)
+            p_list = (2*pi*(10**x) for x in x_list)
 
             phase_list = [phase(_H(p))*180/pi for p in p_list]
 
@@ -392,7 +379,7 @@ def nyquist_plot(fmin: int | float = 0, fmax: int | float = 0) -> None:
             delta_dec = xmax - xmin
 
             x_list = [delta_dec*i/(N-1) + xmin for i in range(N)]
-            p_list = (complex(0, 2*pi*(10**x)) for x in x_list)
+            p_list = (2*pi*(10**x) for x in x_list)
 
             a_list = []
             b_list = []
@@ -439,7 +426,7 @@ def nichols_plot(fmin: int | float = 0, fmax: int | float = 0) -> None:
             delta_dec = xmax - xmin
 
             x_list = [delta_dec*i/(N-1) + xmin for i in range(N)]
-            p_list = (complex(0, 2*pi*(10**x)) for x in x_list)
+            p_list = (2*pi*(10**x) for x in x_list)
 
             phase_list = []
             mag_list = []
@@ -449,8 +436,8 @@ def nichols_plot(fmin: int | float = 0, fmax: int | float = 0) -> None:
                     mag_list.append(20*mt.log10(abs(_H(p))))
                     phase_list.append(phase(_H(p))*180/pi)
                 except:
-                    mag_list.append(20*mt.log10(abs(_H(p+complex(0, 1e-10)))))
-                    phase_list.append(phase(_H(p+complex(0, 1e-10)))*180/pi)
+                    mag_list.append(20*mt.log10(abs(_H(p+1e-10))))
+                    phase_list.append(phase(_H(p+1e-10))*180/pi)
 
             for i in range(1, N):
                 delta = phase_list[i] - phase_list[i-1]
@@ -484,9 +471,9 @@ def stab(tol: float = 0.0001, iter: int = 500) -> None:
     fmax = 100*fmin
     fmid = mt.sqrt(fmin*fmax)
 
-    Gmin = abs(_H(complex(0, 2*pi*fmin)))
-    Gmid = abs(_H(complex(0, 2*pi*fmid)))
-    Gmax = abs(_H(complex(0, 2*pi*fmax)))
+    Gmin = abs(_H(2*pi*fmin))
+    Gmid = abs(_H(2*pi*fmid))
+    Gmax = abs(_H(2*pi*fmax))
 
     counter = 0
     while Gmin > 1 and Gmax > 1:
@@ -498,9 +485,9 @@ def stab(tol: float = 0.0001, iter: int = 500) -> None:
         fmax *= 10
         fmid = mt.sqrt(fmin*fmax)
 
-        Gmin = abs(_H(complex(0, 2*pi*fmin)))
-        Gmid = abs(_H(complex(0, 2*pi*fmid)))
-        Gmax = abs(_H(complex(0, 2*pi*fmax)))
+        Gmin = abs(_H(2*pi*fmin))
+        Gmid = abs(_H(2*pi*fmid))
+        Gmax = abs(_H(2*pi*fmax))
 
         counter += 1
 
@@ -514,9 +501,9 @@ def stab(tol: float = 0.0001, iter: int = 500) -> None:
         fmax *= 0.1
         fmid = mt.sqrt(fmin*fmax)
 
-        Gmin = abs(_H(complex(0, 2*pi*fmin)))
-        Gmid = abs(_H(complex(0, 2*pi*fmid)))
-        Gmax = abs(_H(complex(0, 2*pi*fmax)))
+        Gmin = abs(_H(2*pi*fmin))
+        Gmid = abs(_H(2*pi*fmid))
+        Gmax = abs(_H(2*pi*fmax))
 
         counter += 1
 
@@ -528,9 +515,9 @@ def stab(tol: float = 0.0001, iter: int = 500) -> None:
 
         fmid = mt.sqrt(fmin*fmax)
 
-        Gmin = abs(_H(complex(0, 2*pi*fmin)))
-        Gmid = abs(_H(complex(0, 2*pi*fmid)))
-        Gmax = abs(_H(complex(0, 2*pi*fmax)))
+        Gmin = abs(_H(2*pi*fmin))
+        Gmid = abs(_H(2*pi*fmid))
+        Gmax = abs(_H(2*pi*fmax))
 
         if Gmid > 1 and Gmax < 1:
             fmin = fmid
@@ -550,15 +537,15 @@ def stab(tol: float = 0.0001, iter: int = 500) -> None:
     fmax = 100*fmin
     fmid = mt.sqrt(fmin*fmax)
 
-    Pmin = phase(_H(complex(0, 2*pi*fmin)))
+    Pmin = phase(_H(2*pi*fmin))
     if Pmin >= 0:
         Pmin -= 2*pi
 
-    Pmid = phase(_H(complex(0, 2*pi*fmid)))
+    Pmid = phase(_H(2*pi*fmid))
     if Pmid >= 0:
         Pmid -= 2*pi
 
-    Pmax = phase(_H(complex(0, 2*pi*fmax)))
+    Pmax = phase(_H(2*pi*fmax))
     if Pmax >= 0:
         Pmax -= 2*pi
 
@@ -572,15 +559,15 @@ def stab(tol: float = 0.0001, iter: int = 500) -> None:
         fmax *= 10
         fmid = mt.sqrt(fmin*fmax)
 
-        Pmin = phase(_H(complex(0, 2*pi*fmin)))
+        Pmin = phase(_H(2*pi*fmin))
         if Pmin >= 0:
             Pmin -= 2*pi
 
-        Pmid = phase(_H(complex(0, 2*pi*fmid)))
+        Pmid = phase(_H(2*pi*fmid))
         if Pmid >= 0:
             Pmid -= 2*pi
 
-        Pmax = phase(_H(complex(0, 2*pi*fmax)))
+        Pmax = phase(_H(2*pi*fmax))
         if Pmax >= 0:
             Pmax -= 2*pi
 
@@ -596,15 +583,15 @@ def stab(tol: float = 0.0001, iter: int = 500) -> None:
         fmax *= 0.1
         fmid = mt.sqrt(fmin*fmax)
 
-        Pmin = phase(_H(complex(0, 2*pi*fmin)))
+        Pmin = phase(_H(2*pi*fmin))
         if Pmin >= 0:
             Pmin -= 2*pi
 
-        Pmid = phase(_H(complex(0, 2*pi*fmid)))
+        Pmid = phase(_H(2*pi*fmid))
         if Pmid >= 0:
             Pmid -= 2*pi
 
-        Pmax = phase(_H(complex(0, 2*pi*fmax)))
+        Pmax = phase(_H(2*pi*fmax))
         if Pmax >= 0:
             Pmax -= 2*pi
 
@@ -618,15 +605,15 @@ def stab(tol: float = 0.0001, iter: int = 500) -> None:
 
         fmid = mt.sqrt(fmin*fmax)
 
-        Pmin = phase(_H(complex(0, 2*pi*fmin)))
+        Pmin = phase(_H(2*pi*fmin))
         if Pmin >= 0:
             Pmin -= 2*pi
 
-        Pmid = phase(_H(complex(0, 2*pi*fmid)))
+        Pmid = phase(_H(2*pi*fmid))
         if Pmid >= 0:
             Pmid -= 2*pi
 
-        Pmax = phase(_H(complex(0, 2*pi*fmax)))
+        Pmax = phase(_H(2*pi*fmax))
         if Pmax >= 0:
             Pmax -= 2*pi
 
@@ -642,12 +629,12 @@ def stab(tol: float = 0.0001, iter: int = 500) -> None:
 
     f_pi = fmin
 
-    Pt = phase(_H(complex(0, 2*pi*f_0dB)))
+    Pt = phase(_H(2*pi*f_0dB))
     if Pt >= 0:
         Pt -= 2*pi
     pm = 180 + Pt*180/pi
 
-    gm = -20*mt.log10(abs(_H(complex(0, 2*pi*f_pi))))
+    gm = -20*mt.log10(abs(_H(2*pi*f_pi)))
 
     print(43*"-")
     if abs(pm) < 1:
