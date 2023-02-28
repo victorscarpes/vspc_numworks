@@ -126,7 +126,7 @@ def _gain_maximum_stable(S):
 def _unilateral_test(S):
 	F=S[0];H=S[1];I=S[2];G=S[3];A:0;B=abs(I*H*F*G);C=(1-abs(F)**2)*(1-abs(G)**2)
 	if B==0 and C==0 or _isinf(B)and _isinf(C):A=_nan.real
-	elif B!=0 and B==0:A=_inf.real
+	elif B!=0 and C==0:A=_inf.real
 	else:A=B/C
 	D:0;E:0
 	if A==-1:D=_inf.real

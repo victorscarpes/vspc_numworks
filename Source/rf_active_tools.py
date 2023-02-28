@@ -634,7 +634,7 @@ def _unilateral_test(S: tuple[complex, complex, complex, complex]) -> tuple[floa
 
     if (numerU == 0 and denomU == 0) or (_isinf(numerU) and _isinf(denomU)):
         U = _nan.real
-    elif numerU != 0 and numerU == 0:
+    elif numerU != 0 and denomU == 0:
         U = _inf.real
     else:
         U = numerU/denomU
