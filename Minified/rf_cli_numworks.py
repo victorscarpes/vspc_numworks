@@ -1,22 +1,23 @@
-_Z='\nIn parallel with load:'
-_Y='\nIn series with load:'
-_X='\nIn series with amp output:'
-_W='\nIn parallel with amp output:'
-_V='\nIn parallel with amp input:'
-_T='\nIn series with amp input:'
-_R='\nIn series with source:'
-_Q='\nIn parallel with source:'
-_P='stable.'
+_a='\nIn parallel with load:'
+_Z='\nIn series with load:'
+_Y='\nIn series with amp output:'
+_X='\nIn parallel with amp output:'
+_W='\nIn parallel with amp input:'
+_V='\nIn series with amp input:'
+_T='\nIn series with source:'
+_R='\nIn parallel with source:'
+_Q='stable.'
+_P='G_TU_max = '
 _O='G_TU = '
 _N='Q = '
 _M='Ω'
 _L='Unable to match network.'
 _J='deg'
-_I='dB'
-_H='F'
-_G='C = '
-_F='H'
-_E='L = '
+_I='F'
+_H='C = '
+_G='H'
+_F='L = '
+_E='dB'
 _D='\nPress [ENTER] to continue.'
 _C='-'
 _B='\n'
@@ -84,6 +85,7 @@ _Go=rf._gain_operating(_S,_gammaL)
 _Gmax=rf._gain_maximum(_S)
 _Gstab=rf._gain_maximum_stable(_S)
 _Gtu=rf._gain_unilateral(_S,_gammaS,_gammaL)
+_Gtumax=rf._gain_max_unilateral(_S)
 _K=rf._rollet(_S)
 _delta=_S11*_S22-_S12*_S21
 _muL:0
@@ -135,16 +137,16 @@ _loop_flag=True
 while _loop_flag:
 	print(_B+43*_C);print('0 - Gain metrics');print('1 - Unilaterality metrics');print('2 - Stability metrics');print('3 - Stability circles');print('4 - Simultaneous matching');print('5 - Input low-pass L network');print('6 - Input high-pass L network');print('7 - Output low-pass L network');print('8 - Output high-pass L network');print('9 - Input and output impedances');print('\nEnter operation or press [ENTER] to end');str_in=input('the program: ')
 	if str_in=='0':
-		print(_B+43*_C);print('G_T = '+sf._round_fix(rf._dB(_Gt),unit=_I));print('G_A = '+sf._round_fix(rf._dB(_Ga),unit=_I));print('G_OP = '+sf._round_fix(rf._dB(_Go),unit=_I));print(_O+sf._round_fix(rf._dB(_Gtu),unit=_I))
-		if _K>1 and abs(_delta)<1:print('G_max = '+sf._round_fix(rf._dB(_Gmax),unit=_I))
-		elif abs(_K)<1:print('G_stab = '+sf._round_fix(rf._dB(_Gstab),unit=_I))
+		print(_B+43*_C);print('G_T = '+sf._round_fix(rf._dB(_Gt),unit=_E));print('G_A = '+sf._round_fix(rf._dB(_Ga),unit=_E));print('G_OP = '+sf._round_fix(rf._dB(_Go),unit=_E));print(_O+sf._round_fix(rf._dB(_Gtu),unit=_E));print(_P+sf._round_fix(rf._dB(_Gtumax),unit=_E))
+		if _K>1 and abs(_delta)<1:print('G_max = '+sf._round_fix(rf._dB(_Gmax),unit=_E))
+		elif abs(_K)<1:print('G_stab = '+sf._round_fix(rf._dB(_Gstab),unit=_E))
 		input(_D)
-	elif str_in=='1':print(_B+43*_C);print(_O+sf._round_fix(rf._dB(_Gtu),unit=_I));print('U = '+sf._round_fix(_U));print(sf._round_fix(_lim_inf)+' < G_T/G_TU < '+sf._round_fix(_lim_sup));print('Δ% = '+sf._round_fix(_gain_error)+'%');input(_D)
+	elif str_in=='1':print(_B+43*_C);print(_O+sf._round_fix(rf._dB(_Gtu),unit=_E));print(_P+sf._round_fix(rf._dB(_Gtumax),unit=_E));print('U = '+sf._round_fix(_U));print(sf._round_fix(_lim_inf)+' < G_T/G_TU < '+sf._round_fix(_lim_sup));print('Δ% = '+sf._round_fix(_gain_error)+'%');input(_D)
 	elif str_in=='2':
 		print(_B+43*_C);print('K = '+sf._round_fix(_K));print('|Δ| = '+sf._round_fix(abs(_delta)));print('arg(Δ) = '+sf._round_fix(cm.phase(_delta)*180/pi,unit=_J));print('μ_S = '+sf._round_fix(_muS));print('μ_L = '+sf._round_fix(_muL))
 		if abs(_K)==1:print('\nNetwork is unmatchable.')
-		elif _K>1 and abs(_delta)<1:print('\nNetwork is matchable and unconditionally');print(_P)
-		elif _K>1 and abs(_delta)>1:print('\nNetwork is matchable and conditionally');print(_P)
+		elif _K>1 and abs(_delta)<1:print('\nNetwork is matchable and unconditionally');print(_Q)
+		elif _K>1 and abs(_delta)>1:print('\nNetwork is matchable and conditionally');print(_Q)
 		elif _K<-1:print('\nNetwork is unmatchable and unconditionally');print('unstable.')
 		input(_D)
 	elif str_in=='3':print(_B+43*_C);print('|O_S| = '+sf._round_fix(abs(_Ocs)));print('arg(O_S) = '+sf._round_fix(cm.phase(_Ocs)*180/pi,unit=_J));print('r_S = '+sf._round_fix(_rs));print('\n|O_L| = '+sf._round_fix(abs(_Ocl)));print('arg(O_L) = '+sf._round_fix(cm.phase(_Ocl)*180/pi,unit=_J));print('r_L = '+sf._round_fix(_rl));input(_D)
@@ -158,56 +160,56 @@ while _loop_flag:
 		if rf._isnan(_Q_in_lp)or rf._isnan(_LC1_in_lp)or rf._isnan(_LC2_in_lp):print(_L)
 		else:
 			print(_N+sf._round_fix(_Q_in_lp))
-			if _source_parallel_lp:print(_Q)
-			else:print(_R)
-			if _LC1_in_lp>0:print(_E+sf._round_eng(_LC1_in_lp,unit=_F))
-			else:print(_G+sf._round_eng(-_LC1_in_lp,unit=_H))
-			if _source_parallel_lp:print(_T)
-			else:print(_V)
-			if _LC2_in_lp>0:print(_E+sf._round_eng(_LC2_in_lp,unit=_F))
-			else:print(_G+sf._round_eng(-_LC2_in_lp,unit=_H))
+			if _source_parallel_lp:print(_R)
+			else:print(_T)
+			if _LC1_in_lp>0:print(_F+sf._round_eng(_LC1_in_lp,unit=_G))
+			else:print(_H+sf._round_eng(-_LC1_in_lp,unit=_I))
+			if _source_parallel_lp:print(_V)
+			else:print(_W)
+			if _LC2_in_lp>0:print(_F+sf._round_eng(_LC2_in_lp,unit=_G))
+			else:print(_H+sf._round_eng(-_LC2_in_lp,unit=_I))
 		input(_D)
 	elif str_in=='6':
 		print(_B+43*_C)
 		if rf._isnan(_Q_in_hp)or rf._isnan(_LC1_in_hp)or rf._isnan(_LC2_in_hp):print(_L)
 		else:
 			print(_N+sf._round_fix(_Q_in_hp))
-			if _source_parallel_hp:print(_Q)
-			else:print(_R)
-			if _LC1_in_hp>0:print(_E+sf._round_eng(_LC1_in_hp,unit=_F))
-			else:print(_G+sf._round_eng(-_LC1_in_hp,unit=_H))
-			if _source_parallel_hp:print(_T)
-			else:print(_V)
-			if _LC2_in_hp>0:print(_E+sf._round_eng(_LC2_in_hp,unit=_F))
-			else:print(_G+sf._round_eng(-_LC2_in_hp,unit=_H))
+			if _source_parallel_hp:print(_R)
+			else:print(_T)
+			if _LC1_in_hp>0:print(_F+sf._round_eng(_LC1_in_hp,unit=_G))
+			else:print(_H+sf._round_eng(-_LC1_in_hp,unit=_I))
+			if _source_parallel_hp:print(_V)
+			else:print(_W)
+			if _LC2_in_hp>0:print(_F+sf._round_eng(_LC2_in_hp,unit=_G))
+			else:print(_H+sf._round_eng(-_LC2_in_hp,unit=_I))
 		input(_D)
 	elif str_in=='7':
 		print(_B+43*_C)
 		if rf._isnan(_Q_out_lp)or rf._isnan(_LC1_out_lp)or rf._isnan(_LC2_out_lp):print(_L)
 		else:
 			print(_N+sf._round_fix(_Q_out_lp))
-			if _amp_parallel_lp:print(_W)
-			else:print(_X)
-			if _LC1_out_lp>0:print(_E+sf._round_eng(_LC1_out_lp,unit=_F))
-			else:print(_G+sf._round_eng(-_LC1_out_lp,unit=_H))
-			if _amp_parallel_lp:print(_Y)
-			else:print(_Z)
-			if _LC2_out_lp>0:print(_E+sf._round_eng(_LC2_out_lp,unit=_F))
-			else:print(_G+sf._round_eng(-_LC2_out_lp,unit=_H))
+			if _amp_parallel_lp:print(_X)
+			else:print(_Y)
+			if _LC1_out_lp>0:print(_F+sf._round_eng(_LC1_out_lp,unit=_G))
+			else:print(_H+sf._round_eng(-_LC1_out_lp,unit=_I))
+			if _amp_parallel_lp:print(_Z)
+			else:print(_a)
+			if _LC2_out_lp>0:print(_F+sf._round_eng(_LC2_out_lp,unit=_G))
+			else:print(_H+sf._round_eng(-_LC2_out_lp,unit=_I))
 		input(_D)
 	elif str_in=='8':
 		print(_B+43*_C)
 		if rf._isnan(_Q_out_hp)or rf._isnan(_LC1_out_hp)or rf._isnan(_LC2_out_hp):print(_L)
 		else:
 			print(_N+sf._round_fix(_Q_out_hp))
-			if _amp_parallel_hp:print(_W)
-			else:print(_X)
-			if _LC1_out_hp>0:print(_E+sf._round_eng(_LC1_out_hp,unit=_F))
-			else:print(_G+sf._round_eng(-_LC1_out_hp,unit=_H))
-			if _amp_parallel_hp:print(_Y)
-			else:print(_Z)
-			if _LC2_out_hp>0:print(_E+sf._round_eng(_LC2_out_hp,unit=_F))
-			else:print(_G+sf._round_eng(-_LC2_out_hp,unit=_H))
+			if _amp_parallel_hp:print(_X)
+			else:print(_Y)
+			if _LC1_out_hp>0:print(_F+sf._round_eng(_LC1_out_hp,unit=_G))
+			else:print(_H+sf._round_eng(-_LC1_out_hp,unit=_I))
+			if _amp_parallel_hp:print(_Z)
+			else:print(_a)
+			if _LC2_out_hp>0:print(_F+sf._round_eng(_LC2_out_hp,unit=_G))
+			else:print(_H+sf._round_eng(-_LC2_out_hp,unit=_I))
 		input(_D)
 	elif str_in=='9':print(_B+43*_C);print('|Γ_in| = '+sf._round_fix(abs(_gamma_in)));print('arg(Γ_in) = '+sf._round_fix(cm.phase(_gamma_in)*180/pi,unit=_J));print('\n|Γ_out| = '+sf._round_fix(abs(_gamma_out)));print('arg(Γ_out) = '+sf._round_fix(cm.phase(_gamma_out)*180/pi,unit=_J));print('\nZ_in = '+sf._complex_round_fix(_Zin,unit=_M));print('Z_out = '+sf._complex_round_fix(_Zout,unit=_M));input(_D)
 	else:_loop_flag=False

@@ -468,6 +468,33 @@ def _gain_unilateral(S: tuple[complex, complex, complex, complex], gammaS: int |
     return numer/denom
 
 
+def _gain_max_unilateral(S: tuple[complex, complex, complex, complex]) -> float:
+    """
+    Calculates the maximum unilateral transducer power gain of a 2-port network.
+
+    Args:
+        S (tuple[complex, complex, complex, complex]): Unfolded scattering matrix (S11, S21, S12, S22).
+
+    Returns:
+        float: Maximum unilateral transducer power gain of the network in linear scale.
+    """
+
+    S11: complex = S[0]
+    S21: complex = S[1]
+    S22: complex = S[3]
+
+    numer: float = abs(S21)**2
+    denom: float = abs((1-abs(S11)**2)*(1-abs(S22)**2))
+
+    if (numer == 0 and denom == 0) or (_isinf(numer) and _isinf(denom)):
+        return _nan.real
+
+    if numer != 0 and denom == 0:
+        return _inf.real
+
+    return numer/denom
+
+
 def _gain_availabe(S: tuple[complex, complex, complex, complex], gammaS: int | float | complex) -> float:
     """
     Calculates the available power gain of a 2-port network.
@@ -543,10 +570,8 @@ def _gain_maximum(S: tuple[complex, complex, complex, complex]) -> float:
         float: Maximum power gain of the network in linear scale.
     """
 
-    S11: complex = S[0]
     S21: complex = S[1]
     S12: complex = S[2]
-    S22: complex = S[3]
     K: float = _rollet(S)
 
     if K <= 1:
@@ -556,12 +581,7 @@ def _gain_maximum(S: tuple[complex, complex, complex, complex]) -> float:
         return 0
 
     if S12 == 0:
-        if abs(S11) == 1 or abs(S22) == 1:
-            return _nan.real
-
-        Ggmax: float = abs(1/(1-abs(S11)**2))
-        Glmax: float = abs(1/(1-abs(S22)**2))
-        return Ggmax*Glmax*abs(S21)**2
+        return _gain_max_unilateral(S)
 
     if _isinf(S21) and _isinf(S12):
         return _nan.real

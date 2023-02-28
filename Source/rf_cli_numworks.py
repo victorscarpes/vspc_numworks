@@ -90,6 +90,7 @@ _Go: float = rf._gain_operating(_S, _gammaL)
 _Gmax: float = rf._gain_maximum(_S)
 _Gstab: float = rf._gain_maximum_stable(_S)
 _Gtu: float = rf._gain_unilateral(_S, _gammaS, _gammaL)
+_Gtumax: float = rf._gain_max_unilateral(_S)
 
 _K: float = rf._rollet(_S)
 _delta: complex = _S11*_S22 - _S12*_S21
@@ -174,6 +175,7 @@ while _loop_flag:
         print("G_A = "+sf._round_fix(rf._dB(_Ga), unit="dB"))
         print("G_OP = "+sf._round_fix(rf._dB(_Go), unit="dB"))
         print("G_TU = "+sf._round_fix(rf._dB(_Gtu), unit="dB"))
+        print("G_TU_max = "+sf._round_fix(rf._dB(_Gtumax), unit="dB"))
 
         if _K > 1 and abs(_delta) < 1:
             print("G_max = "+sf._round_fix(rf._dB(_Gmax), unit="dB"))
@@ -185,6 +187,7 @@ while _loop_flag:
     elif str_in == "1":  # Unilaterality metrics
         print("\n"+43*"-")
         print("G_TU = "+sf._round_fix(rf._dB(_Gtu), unit="dB"))
+        print("G_TU_max = "+sf._round_fix(rf._dB(_Gtumax), unit="dB"))
         print("U = "+sf._round_fix(_U))
         print(sf._round_fix(_lim_inf)+" < G_T/G_TU < "+sf._round_fix(_lim_sup))
         print("Δ% = "+sf._round_fix(_gain_error)+"%")

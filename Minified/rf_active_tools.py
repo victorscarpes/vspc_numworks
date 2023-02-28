@@ -90,6 +90,11 @@ def _gain_unilateral(S,gammaS,gammaL):
 	if A==0 and A!=0:return _inf.real
 	if A==0 and A==0:return _nan.real
 	return G/A
+def _gain_max_unilateral(S):
+	C=S[0];D=S[1];E=S[3];A=abs(D)**2;B=abs((1-abs(C)**2)*(1-abs(E)**2))
+	if A==0 and B==0 or _isinf(A)and _isinf(B):return _nan.real
+	if A!=0 and B==0:return _inf.real
+	return A/B
 def _gain_availabe(S,gammaS):
 	B=gammaS;D=S[0];C=S[1]
 	if C==0:return 0
@@ -105,12 +110,10 @@ def _gain_operating(S,gammaL):
 	if A==0 and A==0:return _nan.real
 	return F/A
 def _gain_maximum(S):
-	D=S[0];A=S[1];B=S[2];E=S[3];C=_rollet(S)
+	A=S[1];B=S[2];C=_rollet(S)
 	if C<=1:return _nan.real
 	if A==0:return 0
-	if B==0:
-		if abs(D)==1 or abs(E)==1:return _nan.real
-		F=abs(1/(1-abs(D)**2));G=abs(1/(1-abs(E)**2));return F*G*abs(A)**2
+	if B==0:return _gain_max_unilateral(S)
 	if _isinf(A)and _isinf(B):return _nan.real
 	if _isfinite(A)and B==0:return _inf.real
 	return abs(A/B)/(C+mt.sqrt(C**2-1))
