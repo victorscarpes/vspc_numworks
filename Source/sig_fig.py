@@ -23,12 +23,12 @@ _si_prefix: dict[int, str] = {-30: " q",
                               30: " Q"}
 
 
-def _round_sci(x: int | float, n: int = 5, unit: str = "") -> str:
+def _round_sci(x: float, n: int = 5, unit: str = "") -> str:
     """
     Function that rounds and format a value in scientific notation.
 
     Args:
-        x (int | float): Value to be formatted.
+        x (float): Value to be formatted.
         n (int, optional): Amount of significant figures. Defaults to 5.
         unit (str, optional): Unit of the value. Defaults to "".
 
@@ -113,12 +113,12 @@ def _round_sci(x: int | float, n: int = 5, unit: str = "") -> str:
         return whole + "." + frac + "×10^" + str(sci_exp) + unit
 
 
-def _round_fix(x: int | float, n: int = 5, unit: str = "") -> str:
+def _round_fix(x: float, n: int = 5, unit: str = "") -> str:
     """
     Function that rounds and format a value in standard fixed point notation.
 
     Args:
-        x (int | float): Value to be formatted.
+        x (float): Value to be formatted.
         n (int, optional): Amount of significant figures. Defaults to 5.
         unit (str, optional): Unit of the value. Defaults to "".
 
@@ -146,11 +146,7 @@ def _round_fix(x: int | float, n: int = 5, unit: str = "") -> str:
     if "×" not in sci_str:
         return sci_str + unit
 
-    if "^" not in sci_str:
-        num_exp = 1
-    else:
-        num_exp = int(sci_str.split("^")[1])
-
+    num_exp = 1 if "^" not in sci_str else int(sci_str.split("^")[1])
     long_str = sci_str.split("×")[0]
 
     if "." not in long_str:
@@ -158,9 +154,9 @@ def _round_fix(x: int | float, n: int = 5, unit: str = "") -> str:
 
     while num_exp != 0:
         dot_index = long_str.index(".")
-        num_len = len(long_str)
-
         if num_exp > 0:
+            num_len = len(long_str)
+
             if dot_index == num_len-1:
                 long_str = long_str[:-1] + "0" + "."
             else:
@@ -184,12 +180,12 @@ def _round_fix(x: int | float, n: int = 5, unit: str = "") -> str:
     return long_str + unit
 
 
-def _round_eng(x: int | float, n: int = 5, unit: str = "") -> str:
+def _round_eng(x: float, n: int = 5, unit: str = "") -> str:
     """
     Function that rounds and format a value in enginerring notation (using the appropriate SI prefix).
 
     Args:
-        x (int | float): Value to be formatted.
+        x (float): Value to be formatted.
         n (int, optional): Amount of significant figures. Defaults to 5.
         unit (str, optional): Unit of the value. Defaults to "".
 
@@ -282,12 +278,12 @@ def _round_eng(x: int | float, n: int = 5, unit: str = "") -> str:
     return long_string + _si_prefix[si_exp] + unit
 
 
-def _complex_round_sci(z: int | float | complex, n: int = 5, unit: str = "") -> str:
+def _complex_round_sci(z: complex, n: int = 5, unit: str = "") -> str:
     """
     Function that rounds and format a value as a complex number with real and imaginary parts in scientific notation.
 
     Args:
-        z (int | float | complex): Value to be formatted.
+        z (complex): Value to be formatted.
         n (int, optional): Amount of significant figures. Defaults to 5.
         unit (str, optional): Unit of the value. Defaults to "".
 
@@ -327,12 +323,12 @@ def _complex_round_sci(z: int | float | complex, n: int = 5, unit: str = "") -> 
     return "(" + a_str + b_str + ")" + unit
 
 
-def _complex_round_fix(z: int | float | complex, n: int = 5, unit: str = "") -> str:
+def _complex_round_fix(z: complex, n: int = 5, unit: str = "") -> str:
     """
     Function that rounds and format a value as a complex number with real and imaginary parts in standard fixed point notation.
 
     Args:
-        z (int | float | complex): Value to be formatted.
+        z (complex): Value to be formatted.
         n (int, optional): Amount of significant figures. Defaults to 5.
         unit (str, optional): Unit of the value. Defaults to "".
 

@@ -8,12 +8,12 @@ _inf: complex = complex("inf")
 _nan: complex = complex("nan")
 
 
-def _isnan(z: float | complex) -> bool:
+def _isnan(z: complex) -> bool:
     """
     Verifies if the input is NaN (Not a Number). If both the real and imaginary parts of z are not NaN, returns False. Returns True otherwise.
 
     Args:
-        z (float | complex): Number to be tested.
+        z (complex): Number to be tested.
 
     Returns:
         bool: Boolean result of test.
@@ -25,12 +25,12 @@ def _isnan(z: float | complex) -> bool:
     return mt.isnan(a) or mt.isnan(b)
 
 
-def _isinf(z: float | complex) -> bool:
+def _isinf(z: complex) -> bool:
     """
     Verifies if the input is infinite. If z is NaN or both the real and imaginary parts of z are not inifnite, returns False. Returns True otherwise.
 
     Args:
-        z (float | complex): Number to be tested.
+        z (complex): Number to be tested.
 
     Returns:
         bool: Boolean result of test.
@@ -45,12 +45,12 @@ def _isinf(z: float | complex) -> bool:
     return mt.isinf(a) or mt.isinf(b)
 
 
-def _isfinite(z: float | complex) -> bool:
+def _isfinite(z: complex) -> bool:
     """
     Verifies if the input is finite. If z is either infinite or NaN returns False. Returns True otherwise.
 
     Args:
-        z (float | complex): Number to be tested.
+        z (complex): Number to be tested.
 
     Returns:
         bool: Boolean result of test.
@@ -59,12 +59,12 @@ def _isfinite(z: float | complex) -> bool:
     return not _isinf(z) and not _isnan(z)
 
 
-def _dB(z: int | float | complex) -> float:
+def _dB(z: complex) -> float:
     """
     Calculates the magnitude of z in decibels. If z is null or infinite, returns the float versions of -inf and inf respectively. Returns the usual power ratio decibel formula (10log|z|) otherwise.
 
     Args:
-        z (int | float | complex): Value to be converted into decibels.
+        z (complex): Value to be converted into decibels.
 
     Returns:
         float: Result in decibels.
@@ -73,18 +73,15 @@ def _dB(z: int | float | complex) -> float:
     if z == 0:
         return -_inf.real
 
-    if _isinf(z):
-        return _inf.real
-
-    return 10*mt.log10(abs(z))
+    return _inf.real if _isinf(z) else 10*mt.log10(abs(z))
 
 
-def _real(z: int | float | complex) -> float:
+def _real(z: complex) -> float:
     """
     Calculate the real part of the input.
 
     Args:
-        z (int | float | complex): Input.
+        z (complex): Input.
 
     Returns:
         float: Real part of the input.
@@ -93,12 +90,12 @@ def _real(z: int | float | complex) -> float:
     return complex(z).real
 
 
-def _imag(z: int | float | complex) -> float:
+def _imag(z: complex) -> float:
     """
     Calculate the imaginary part of the input.
 
     Args:
-        z (int | float | complex): Input.
+        z (complex): Input.
 
     Returns:
         float: Imaginary part of the input.
@@ -107,12 +104,12 @@ def _imag(z: int | float | complex) -> float:
     return complex(z).imag
 
 
-def _conj(z: int | float | complex) -> complex:
+def _conj(z: complex) -> complex:
     """
     Calculates the complex conjugate of the input.
 
     Args:
-        z (int | float | complex): Input.
+        z (complex): Input.
 
     Returns:
         float: Conjugate of the input.
@@ -124,13 +121,13 @@ def _conj(z: int | float | complex) -> complex:
     return complex(a, -b)
 
 
-def _pol(r: int | float, theta: int | float) -> complex:
+def _pol(r: float, theta: float) -> complex:
     """
     Calculates the complex number given it's magnitude and phase in radians.
 
     Args:
-        r (int | float): Magnitude of the number.
-        theta (int | float): Phase of the number in radians.
+        r (float): Magnitude of the number.
+        theta (float): Phase of the number in radians.
 
     Returns:
         complex: Resulting complex number.
@@ -139,13 +136,13 @@ def _pol(r: int | float, theta: int | float) -> complex:
     return r*cm.exp(_j*theta)
 
 
-def _z_to_s(Z: int | float | complex, Z0: int | float | complex = 50) -> complex:
+def _z_to_s(Z: complex, Z0: complex = 50) -> complex:
     """
     Converts the given impedance to it's corresponding reflection coefficient.
 
     Args:
-        Z (int | float | complex): Impedance to be converted in ohms.
-        Z0 (int | float | complex, optional): Reference impedance in ohms. Defaults to 50.
+        Z (complex): Impedance to be converted in ohms.
+        Z0 (complex, optional): Reference impedance in ohms. Defaults to 50.
 
     Returns:
         complex: Corresponding reflection coefficient.
@@ -154,19 +151,16 @@ def _z_to_s(Z: int | float | complex, Z0: int | float | complex = 50) -> complex
     if Z+Z0 == 0:
         return _inf
 
-    if _isinf(Z):
-        return 1
-
-    return (Z-Z0)/(Z+Z0)
+    return 1 if _isinf(Z) else (Z-Z0)/(Z+Z0)
 
 
-def _s_to_z(gamma: int | float | complex, Z0: int | float | complex = 50) -> complex:
+def _s_to_z(gamma: complex, Z0: complex = 50) -> complex:
     """
     Converts the given reflection coefficient to it's corresponding impedance.
 
     Args:
-        gamma (int | float | complex): Reflection coefficient to be converted.
-        Z0 (int | float | complex, optional): Reference impedance in ohms. Defaults to 50.
+        gamma (complex): Reflection coefficient to be converted.
+        Z0 (complex, optional): Reference impedance in ohms. Defaults to 50.
 
     Returns:
         complex: Corresponding impedance.
@@ -175,10 +169,7 @@ def _s_to_z(gamma: int | float | complex, Z0: int | float | complex = 50) -> com
     if gamma == 1:
         return _inf
 
-    if _isinf(gamma):
-        return -Z0
-
-    return Z0*(1+gamma)/(1-gamma)
+    return -Z0 if _isinf(gamma) else Z0*(1+gamma)/(1-gamma)
 
 
 def _source_stab_circle(S: tuple[complex, complex, complex, complex]) -> tuple[complex, float]:
@@ -277,13 +268,13 @@ def _load_stab_circle(S: tuple[complex, complex, complex, complex]) -> tuple[com
     return (Ocl, rl)
 
 
-def _input_reflection(S: tuple[complex, complex, complex, complex], gammaL: int | float | complex) -> complex:
+def _input_reflection(S: tuple[complex, complex, complex, complex], gammaL: complex) -> complex:
     """
     Calculates the reflection coefficient at the input of a 2-port network when the output is loaded.
 
     Args:
         S (tuple[complex, complex, complex, complex]): Unfolded scattering matrix (S11, S21, S12, S22).
-        gammaL (int | float | complex): Reflection coefficient of the impedance loading the output.
+        gammaL (complex): Reflection coefficient of the impedance loading the output.
 
     Returns:
         complex: Reflection coefficient at the input.
@@ -294,39 +285,29 @@ def _input_reflection(S: tuple[complex, complex, complex, complex], gammaL: int 
     S12: complex = S[2]
     S22: complex = S[3]
 
-    if 1-S22*gammaL == 0 and S21*S12*gammaL != 0:
-        return _inf
-
-    if 1-S22*gammaL == 0 and S21*S12*gammaL == 0:
-        return _nan
-
+    if S22 * gammaL == 1:
+        return _inf if S21*S12*gammaL != 0 else _nan
     return S11 + (S21*S12*gammaL)/(1-S22*gammaL)
 
 
-def _output_reflection(S: tuple[complex, complex, complex, complex], gammaS: int | float | complex) -> complex:
+def _output_reflection(S: tuple[complex, complex, complex, complex], gammaS: complex) -> complex:
     """
     Calculates the reflection coefficient at the output of a 2-port network when the input is loaded.
 
     Args:
         S (tuple[complex, complex, complex, complex]): Unfolded scattering matrix (S11, S21, S12, S22).
-        gammaS (int | float | complex): Reflection coefficient of the impedance loading the input.
+        gammaS (complex): Reflection coefficient of the impedance loading the input.
 
     Returns:
         complex: Reflection coefficient at the output.
     """
 
     S11: complex = S[0]
-    S21: complex = S[1]
-    S12: complex = S[2]
-    S22: complex = S[3]
-
-    if 1-S11*gammaS == 0 and 1-S11*gammaS != 0:
-        return _inf
-
-    if 1-S11*gammaS == 0 and 1-S11*gammaS == 0:
+    if S11 * gammaS == 1:
         return _nan
 
-    return S22 + (S21*S12*gammaS)/(1-S11*gammaS)
+    S21: complex = S[1]
+    return S[3] + S21 * S[2] * gammaS / (1-S11*gammaS)
 
 
 def _rollet(S: tuple[complex, complex, complex, complex]) -> float:
@@ -349,14 +330,15 @@ def _rollet(S: tuple[complex, complex, complex, complex]) -> float:
     numer = 1+abs(delta)**2 - abs(S11)**2 - abs(S22)**2
     denom = 2*abs(S12)*abs(S21)
 
-    if denom == 0 and numer > 0:
-        return _inf.real
+    if denom == 0:
+        if numer > 0:
+            return _inf.real
 
-    if denom == 0 and numer < 0:
-        return -_inf.real
+        if numer < 0:
+            return -_inf.real
 
-    if denom == 0 and numer == 0:
-        return _nan.real
+        if numer == 0:
+            return _nan.real
 
     return numer/denom
 
@@ -385,7 +367,7 @@ def _mu_stab(S: tuple[complex, complex, complex, complex]) -> tuple[float, float
 
     if denomS == 0 and numerS != 0:
         muS = _inf.real
-    elif denomS == 0 and numerS == 0:
+    elif denomS == 0:
         muS = _nan.real
     else:
         muS = numerS/denomS
@@ -395,7 +377,7 @@ def _mu_stab(S: tuple[complex, complex, complex, complex]) -> tuple[float, float
 
     if denomL == 0 and numerL != 0:
         muL = _inf.real
-    elif denomL == 0 and numerL == 0:
+    elif denomL == 0:
         muL = _nan.real
     else:
         muL = numerL/denomL
@@ -403,14 +385,14 @@ def _mu_stab(S: tuple[complex, complex, complex, complex]) -> tuple[float, float
     return (muS, muL)
 
 
-def _gain_transducer(S: tuple[complex, complex, complex, complex], gammaS: int | float | complex, gammaL: int | float | complex) -> float:
+def _gain_transducer(S: tuple[complex, complex, complex, complex], gammaS: complex, gammaL: complex) -> float:
     """
     Calculates the transducer power gain of a 2-port network.
 
     Args:
         S (tuple[complex, complex, complex, complex]): Unfolded scattering matrix (S11, S21, S12, S22).
-        gammaS (int | float | complex): Reflection coefficient of the source.
-        gammaL (int | float | complex): Reflection coefficient of the load.
+        gammaS (complex): Reflection coefficient of the source.
+        gammaL (complex): Reflection coefficient of the load.
 
     Returns:
         float: Transducer power gain of the network in linear scale.
@@ -427,23 +409,17 @@ def _gain_transducer(S: tuple[complex, complex, complex, complex], gammaS: int |
     numer: float = (1-abs(gammaS)**2)*(abs(S21)**2)*(1-abs(gammaL)**2)
     denom: float = abs((1-S11*gammaS)*(1-S22*gammaL)-S12*S21*gammaL*gammaS)**2
 
-    if denom == 0 and denom != 0:
-        return _inf.real
-
-    if denom == 0 and denom == 0:
-        return _nan.real
-
-    return numer/denom
+    return _nan.real if denom == 0 else numer/denom
 
 
-def _gain_unilateral(S: tuple[complex, complex, complex, complex], gammaS: int | float | complex, gammaL: int | float | complex) -> float:
+def _gain_unilateral(S: tuple[complex, complex, complex, complex], gammaS: complex, gammaL: complex) -> float:
     """
     Calculates the unilateral transducer power gain of a 2-port network.
 
     Args:
         S (tuple[complex, complex, complex, complex]): Unfolded scattering matrix (S11, S21, S12, S22).
-        gammaS (int | float | complex): Reflection coefficient of the source.
-        gammaL (int | float | complex): Reflection coefficient of the load.
+        gammaS (complex): Reflection coefficient of the source.
+        gammaL (complex): Reflection coefficient of the load.
 
     Returns:
         float: Unilateral transducer power gain of the network in linear scale.
@@ -459,13 +435,7 @@ def _gain_unilateral(S: tuple[complex, complex, complex, complex], gammaS: int |
     numer: float = (1-abs(gammaS)**2)*(abs(S21)**2)*(1-abs(gammaL)**2)
     denom: float = abs((1-S11*gammaS)*(1-S22*gammaL))**2
 
-    if denom == 0 and denom != 0:
-        return _inf.real
-
-    if denom == 0 and denom == 0:
-        return _nan.real
-
-    return numer/denom
+    return _nan.real if denom == 0 else numer/denom
 
 
 def _gain_max_unilateral(S: tuple[complex, complex, complex, complex]) -> float:
@@ -489,19 +459,16 @@ def _gain_max_unilateral(S: tuple[complex, complex, complex, complex]) -> float:
     if (numer == 0 and denom == 0) or (_isinf(numer) and _isinf(denom)):
         return _nan.real
 
-    if numer != 0 and denom == 0:
-        return _inf.real
-
-    return numer/denom
+    return _inf.real if numer != 0 and denom == 0 else numer/denom
 
 
-def _gain_availabe(S: tuple[complex, complex, complex, complex], gammaS: int | float | complex) -> float:
+def _gain_availabe(S: tuple[complex, complex, complex, complex], gammaS: complex) -> float:
     """
     Calculates the available power gain of a 2-port network.
 
     Args:
         S (tuple[complex, complex, complex, complex]): Unfolded scattering matrix (S11, S21, S12, S22).
-        gammaS (int | float | complex): Reflection coefficient of the source.
+        gammaS (complex): Reflection coefficient of the source.
 
     Returns:
         float: Available power gain of the network in linear scale.
@@ -518,22 +485,16 @@ def _gain_availabe(S: tuple[complex, complex, complex, complex], gammaS: int | f
     numer: float = (1-abs(gammaS)**2)*abs(S21)**2
     denom: float = (1-abs(gammaOut)**2)*abs(1-S11*gammaS)**2
 
-    if denom == 0 and denom != 0:
-        return _inf.real
-
-    if denom == 0 and denom == 0:
-        return _nan.real
-
-    return numer/denom
+    return _nan.real if denom == 0 else numer/denom
 
 
-def _gain_operating(S: tuple[complex, complex, complex, complex], gammaL: int | float | complex) -> float:
+def _gain_operating(S: tuple[complex, complex, complex, complex], gammaL: complex) -> float:
     """
     Calculates the operating power gain of a 2-port network.
 
     Args:
         S (tuple[complex, complex, complex, complex]): Unfolded scattering matrix (S11, S21, S12, S22).
-        gammaL (int | float | complex): Reflection coefficient of the load.
+        gammaL (complex): Reflection coefficient of the load.
 
     Returns:
         float: Operating power gain of the network in linear scale.
@@ -550,13 +511,7 @@ def _gain_operating(S: tuple[complex, complex, complex, complex], gammaL: int | 
     numer: float = (1-abs(gammaL)**2)*abs(S21)**2
     denom: float = (1-abs(gammaIn)**2)*abs(1-S22*gammaL)**2
 
-    if denom == 0 and denom != 0:
-        return _inf.real
-
-    if denom == 0 and denom == 0:
-        return _nan.real
-
-    return numer/denom
+    return _nan.real if denom == 0 else numer/denom
 
 
 def _gain_maximum(S: tuple[complex, complex, complex, complex]) -> float:
@@ -616,16 +571,10 @@ def _gain_maximum_stable(S: tuple[complex, complex, complex, complex]) -> float:
     if S21 == 0:
         return 0
 
-    if S12 == 0 and S21 == 0:
-        return _nan.real
-
     if _isinf(S12) and _isinf(S21):
         return _nan.real
 
-    if _isinf(S12) and _isfinite(S21):
-        return _inf.real
-
-    return abs(S21/S12)
+    return _inf.real if _isinf(S12) and _isfinite(S21) else abs(S21/S12)
 
 
 def _unilateral_test(S: tuple[complex, complex, complex, complex]) -> tuple[float, float, float]:
@@ -662,20 +611,12 @@ def _unilateral_test(S: tuple[complex, complex, complex, complex]) -> tuple[floa
     lim_inf: float
     lim_sup: float
 
-    if U == -1:
-        lim_inf = _inf.real
-    else:
-        lim_inf = 1/((1+U)**2)
-
-    if U == 1:
-        lim_sup = _inf.real
-    else:
-        lim_sup = 1/((1-U)**2)
-
+    lim_inf = _inf.real if U == -1 else 1/((1+U)**2)
+    lim_sup = _inf.real if U == 1 else 1/((1-U)**2)
     return (U, lim_inf, lim_sup)
 
 
-def _x_to_lc(x: int | float, f: int | float) -> float:
+def _x_to_lc(x: float, f: float) -> float:
     """
     Calculates the equivalent capacitance or inductance from a given reactance. When the choice between capacitance or inductance cannot be made (x=0, x=inf, f=0 or x=inf), returns NaN. If the frequency is negative, the absolute value is used.
 
@@ -690,20 +631,17 @@ def _x_to_lc(x: int | float, f: int | float) -> float:
     if x*f == 0 or _isinf(x*f):
         return _nan.real
 
-    if x > 0:
-        return x/(2*_pi*abs(f))
-
-    return 1/(2*_pi*abs(f)*x)
+    return x/(2*_pi*abs(f)) if x > 0 else 1/(2*_pi*abs(f)*x)
 
 
-def _l_matching_network(ZS: int | float | complex, ZL: int | float | complex, f: int | float, block_DC: bool = False) -> tuple[float, float, float, bool]:
+def _l_matching_network(ZS: complex, ZL: complex, f: float, block_DC: bool = False) -> tuple[float, float, float, bool]:
     """
     Calculate the L matching network that adapts a power source with impedance ZS to a load with impedance ZL at a given frequency. The algorithm adds parallel or series reactances to load and source to compensate their imaginary parts. Then it uses the the simplified resistance transformation equations to design a L matching network. Those added reactances are then incorporated into the network.
 
     Args:
-        ZS (int | float | complex): Source impedance.
-        ZL (int | float | complex): Load impedance.
-        f (int | float): Frequency of operation.
+        ZS (complex): Source impedance.
+        ZL (complex): Load impedance.
+        f (float): Frequency of operation.
         block_DC (bool, optional): Optional flag defining if the network is low-pass or high-pass. Defaults to False.
 
     Returns:
@@ -773,12 +711,8 @@ def _two_port_match(S: tuple[complex, complex, complex, complex]) -> tuple[compl
     B: float = 1 + abs(S11)**2 - abs(S22)**2 - abs(delta)**2
     C: complex = S11 - delta*_conj(S22)
 
-    if C == 0 and B == 0:
-        return (_nan, _nan)
-
-    if C == 0 and B != 0:
-        return (0, _conj(S22))
-
+    if C == 0:
+        return (_nan, _nan) if B == 0 else (0, _conj(S22))
     gammaS: complex = (B + cm.sqrt(B**2 - 4*abs(C)**2))/(2*C)
     gammaL: complex = _conj(_output_reflection(S, gammaS))
 

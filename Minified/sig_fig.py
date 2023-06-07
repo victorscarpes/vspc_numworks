@@ -41,13 +41,12 @@ def _round_fix(x,n=5,unit=''):
 	if mt.isinf(x):return'inf'+C
 	D=_round_sci(x=x,n=n,unit='')
 	if'×'not in D:return D+C
-	if'^'not in D:E=1
-	else:E=int(D.split('^')[1])
-	A=D.split('×')[0]
+	E=1 if'^'not in D else int(D.split('^')[1]);A=D.split('×')[0]
 	if'.'not in A:A+='.'
 	while E!=0:
-		B=A.index('.');G=len(A)
+		B=A.index('.')
 		if E>0:
+			G=len(A)
 			if B==G-1:A=A[:-1]+'0'+'.'
 			else:H=A[B+1];A=A[:B]+H+'.'+A[B+2:]
 			E-=1

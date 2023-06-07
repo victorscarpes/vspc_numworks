@@ -21,12 +21,10 @@ def _H(p):
 	for C in _poles:B=B*(p-C)
 	return A/B
 def H(f):
-	B=_H(2*pi*f);A=phase(B)*180/pi;print(43*'-')
-	try:C=20*mt.log10(abs(B));print(sf._round_fix(C,unit='dB'))
+	A=_H(2*pi*f);B=phase(A)*180/pi;print(43*'-')
+	try:C=20*mt.log10(abs(A));print(sf._round_fix(C,unit='dB'))
 	except:print('-inf dB')
-	if abs(A)<1:print(sf._round_fix(A,unit='deg'))
-	else:print(sf._round_fix(A,unit='deg'))
-	print(43*'-')
+	print(sf._round_fix(B,unit='deg'));print(43*'-')
 def _is_equal(z1,z2,n=5):
 	A=pl._real(z1)
 	if A!=0:Q=mt.floor(mt.log10(abs(A)));I=A/10**Q;I=round(I,n-1);A=I*10**Q
@@ -50,9 +48,7 @@ def coeffs():
 	for A in _poles[:]:
 		for B in _zeros[:]:
 			if _is_equal(A,B):_poles.remove(A);_zeros.remove(B)
-	_freqs=[]
-	for A in _poles+_zeros:C=abs(A/(2*pi));_freqs.append(C)
-	_freqs.sort()
+	_freqs=[abs(A/(2*pi))for A in _poles+_zeros];_freqs.sort()
 def pole_values():
 	print(43*'-')
 	if len(_poles)==0:print('No poles')

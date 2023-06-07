@@ -13,12 +13,12 @@ _poles = []
 _zeros = []
 
 
-def _H(p: int | float | complex) -> complex:
+def _H(p: complex) -> complex:
     """
     Calculates the transfer function at a given p value.
 
     Args:
-        p (int | float | complex): Laplace variable.
+        p (complex): Laplace variable.
 
     Returns:
         complex: Transfer function calculated on the given p value.
@@ -53,12 +53,12 @@ def _H(p: int | float | complex) -> complex:
     return numerator/denominator
 
 
-def H(f: int | float) -> None:
+def H(f: float) -> None:
     """
     Calculates the transfer function at a given real frequency and prints the magnitude in dB and phase in degrees.
 
     Args:
-        f (int | float): Input frequency.
+        f (float): Input frequency.
     """
 
     z = _H(2*pi*f)
@@ -71,20 +71,17 @@ def H(f: int | float) -> None:
     except:
         print("-inf dB")
 
-    if abs(phi) < 1:
-        print(sf._round_fix(phi, unit="deg"))
-    else:
-        print(sf._round_fix(phi, unit="deg"))
+    print(sf._round_fix(phi, unit="deg"))
     print(43*"-")
 
 
-def _is_equal(z1: int | float | complex, z2: int | float | complex, n: int = 5) -> bool:
+def _is_equal(z1: complex, z2: complex, n: int = 5) -> bool:
     """
     Verify if two complex numbers are equal up to a given tolerance. Returns true if both real and imaginary parts are withing tolerance and/or both magnitude and phase are withing tolerance. To check if any 2 numbers are withing tolerance, truncates both values up to n significant figures and check if they are equal.
 
     Args:
-        z1 (int | float | complex): First complex number.
-        z2 (int | float | complex): Second complex number.
+        z1 (complex): First complex number.
+        z2 (complex): Second complex number.
         n (int, optional): Significant figures for tolerance checking. Defaults to 5.
 
     Returns:
@@ -183,12 +180,7 @@ def coeffs() -> None:
                 _poles.remove(p)
                 _zeros.remove(z)
 
-    _freqs = []
-
-    for p in _poles + _zeros:
-        f = abs(p/(2*pi))
-        _freqs.append(f)
-
+    _freqs = [abs(p/(2*pi)) for p in _poles + _zeros]
     _freqs.sort()
 
 
@@ -261,13 +253,13 @@ def root_locust_plot() -> None:
     plt.show()
 
 
-def mag_plot(fmin: int | float = 0, fmax: int | float = 0) -> None:
+def mag_plot(fmin: float = 0, fmax: float = 0) -> None:
     """
     Function that plots the gain Bode diagram. If not specified, the frequency range goes from 2 decades lower than the minimal corner frequency (excluding frequency zero) up to 2 decades higher than the maximal corner frequency. The y axis displays the gain in decibels and the x axis displays the log of frequency.
 
     Args:
-        fmin (int | float, optional): Frequency sweep start. Defaults to 0.
-        fmax (int | float, optional): Frequency sweep end. Defaults to 0.
+        fmin (float, optional): Frequency sweep start. Defaults to 0.
+        fmax (float, optional): Frequency sweep end. Defaults to 0.
     """
 
     N = 500
@@ -307,13 +299,13 @@ def mag_plot(fmin: int | float = 0, fmax: int | float = 0) -> None:
     plt.show()
 
 
-def phase_plot(fmin: int | float = 0, fmax: int | float = 0) -> None:
+def phase_plot(fmin: float = 0, fmax: float = 0) -> None:
     """
     Function that plots phase Bode diagram. The frequency range goes from 2 decades lower than the minimal corner frequency (excluding frequency zero) up to 2 decades higher than the maximal corner frequency. The y axis displays the phase in degrees and the x axis displays the log of frequency.
 
     Args:
-        fmin (int | float, optional): Frequency sweep start. Defaults to 0.
-        fmax (int | float, optional): Frequency sweep end. Defaults to 0.
+        fmin (float, optional): Frequency sweep start. Defaults to 0.
+        fmax (float, optional): Frequency sweep end. Defaults to 0.
     """
 
     N = 500
@@ -353,13 +345,13 @@ def phase_plot(fmin: int | float = 0, fmax: int | float = 0) -> None:
     plt.show()
 
 
-def nyquist_plot(fmin: int | float = 0, fmax: int | float = 0) -> None:
+def nyquist_plot(fmin: float = 0, fmax: float = 0) -> None:
     """
     Function that plots the Nyquist plot. The frequency range goes from 2 decades lower than the minimal corner frequency (excluding frequency zero) up to 2 decades higher than the maximal corner frequency. The y axis displays the imaginary part and the x axis displays the real part. Also plots the point -1+0j to faccilitate stability checking.
 
     Args:
-        fmin (int | float, optional): Frequency sweep start. Defaults to 0.
-        fmax (int | float, optional): Frequency sweep end. Defaults to 0.
+        fmin (float, optional): Frequency sweep start. Defaults to 0.
+        fmax (float, optional): Frequency sweep end. Defaults to 0.
     """
 
     N = 500
@@ -400,13 +392,13 @@ def nyquist_plot(fmin: int | float = 0, fmax: int | float = 0) -> None:
     plt.show()
 
 
-def nichols_plot(fmin: int | float = 0, fmax: int | float = 0) -> None:
+def nichols_plot(fmin: float = 0, fmax: float = 0) -> None:
     """
     Function that plots the Nichols plot. The frequency range goes from 2 decades lower than the minimal corner frequency (excluding frequency zero) up to 2 decades higher than the maximal corner frequency. The y axis displays the gain in decibels and the x axis displays phase in degrees. Also plots the point (0 dB, -180 deg) to faccilitate stability checking.
 
     Args:
-        fmin (int | float, optional): Frequency sweep start. Defaults to 0.
-        fmax (int | float, optional): Frequency sweep end. Defaults to 0.
+        fmin (float, optional): Frequency sweep start. Defaults to 0.
+        fmax (float, optional): Frequency sweep end. Defaults to 0.
     """
 
     N = 500
