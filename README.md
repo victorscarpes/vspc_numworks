@@ -10,7 +10,7 @@ To compress the files, run the `source_compressor.py` script at the root of the 
 
 ### RAM optimization
 
-Sometimes, when long literal expressions are used often, one way to reduce the size of the script is to assign those literals to a variable with a shor name and just usa that instead. This allows the file to use less characters. The problem is that now that literal is stored in RAM. If the program is already close to the RAM usage limit, the compression can render the script unusable. By default, this type of optmization is not done, but in cases where RAM is not an issue, including the comment `# optmize_ram` anywhere on the script will tell the compressor that this type of optimization can be done.
+Sometimes, when long literal expressions are used often, one way to reduce the size of the script is to assign those literals to a variable with a short name and just usa that instead. This allows the file to use less characters. The problem is that now that literal is stored in RAM. If the program is already close to the RAM usage limit, the compression can render the script unusable. By default, this type of optmization is not done, but in cases where RAM is not an issue, including the comment `# optmize_ram` anywhere on the script will tell the compressor that this type of optimization can be done.
 
 ## Global variables naming convention
 
