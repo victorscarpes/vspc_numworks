@@ -1,8 +1,8 @@
-from matplotlib.pyplot import *
-from math import *
+from matplotlib.pyplot import*
+from math import*
 g=9.81
 def _x(t,v_0,alpha):return v_0*cos(alpha)*t
-def _y(t,v_0,alpha,h_0):return-0.5*g*t**2+v_0*sin(alpha)*t+h_0
+def _y(t,v_0,alpha,h_0):return-.5*g*t**2+v_0*sin(alpha)*t+h_0
 def _vx(v_0,alpha):return v_0*cos(alpha)
 def _vy(t,v_0,alpha):return-g*t+v_0*sin(alpha)
 def _t_max(v_0,alpha,h_0):return(v_0*sin(alpha)+sqrt(v_0**2*sin(alpha)**2+2*g*h_0))/g

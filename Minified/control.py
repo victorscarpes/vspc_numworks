@@ -75,7 +75,7 @@ def mag_plot(fmin=0,fmax=0):
 	D=fmax;C=fmin;B=500
 	while B>0:
 		try:
-			if C<=0 or D<=0 or D<=C:A=(B for B in A if B!=0);E=mt.log10(min(A)/100);A=(B for B in A if B!=0);G=mt.log10(max(A)*100)
+			if C<=0 or D<=0 or D<=C:A=(A for A in A if A!=0);E=mt.log10(min(A)/100);A=(A for A in A if A!=0);G=mt.log10(max(A)*100)
 			else:E=mt.log10(C);G=mt.log10(D)
 			J=G-E;H=[J*A/(B-1)+E for A in range(B)];K=(2*pi*10**A for A in H);F=[]
 			for I in K:
@@ -103,7 +103,7 @@ def nyquist_plot(fmin=0,fmax=0):
 	D=fmax;C=fmin;B=500
 	while B>0:
 		try:
-			if C<=0 or D<=0 or D<=C:A=(B for B in A if B!=0);E=mt.log10(min(A)/100);A=(B for B in A if B!=0);F=mt.log10(max(A)*100)
+			if C<=0 or D<=0 or D<=C:A=(A for A in A if A!=0);E=mt.log10(min(A)/100);A=(A for A in A if A!=0);F=mt.log10(max(A)*100)
 			else:E=mt.log10(C);F=mt.log10(D)
 			J=F-E;K=[J*A/(B-1)+E for A in range(B)];L=(2*pi*10**A for A in K);G=[];H=[]
 			for I in L:G.append(pl._real(_H(I)));H.append(pl._imag(_H(I)))
@@ -128,7 +128,7 @@ def nichols_plot(fmin=0,fmax=0):
 		except:B-=10
 	else:print('Unable to allocate memory');return
 	plt.show()
-def stab(tol=0.0001,iter=500):
+def stab(tol=.0001,iter=500):
 	A=min(_freqs)/100
 	if A==0:A=1
 	B=100*A;C=mt.sqrt(A*B);H=abs(_H(2*pi*A));I=abs(_H(2*pi*C));J=abs(_H(2*pi*B));D=0
@@ -138,7 +138,7 @@ def stab(tol=0.0001,iter=500):
 	D=0
 	while H<1 and J<1:
 		if D>=iter:print('Not able to find margins');return
-		A*=0.1;B*=0.1;C=mt.sqrt(A*B);H=abs(_H(2*pi*A));I=abs(_H(2*pi*C));J=abs(_H(2*pi*B));D+=1
+		A*=.1;B*=.1;C=mt.sqrt(A*B);H=abs(_H(2*pi*A));I=abs(_H(2*pi*C));J=abs(_H(2*pi*B));D+=1
 	D=0
 	while abs(H-1)>tol:
 		if D>=iter:print('Not able to find margins');return
@@ -169,7 +169,7 @@ def stab(tol=0.0001,iter=500):
 	D=0
 	while E<-pi and G<-pi:
 		if D>=iter:print('Not able to find margins');return
-		A*=0.1;B*=0.1;C=mt.sqrt(A*B);E=phase(_H(2*pi*A))
+		A*=.1;B*=.1;C=mt.sqrt(A*B);E=phase(_H(2*pi*A))
 		if E>=0:E-=2*pi
 		F=phase(_H(2*pi*C))
 		if F>=0:F-=2*pi

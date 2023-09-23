@@ -26,7 +26,7 @@ import cmath as cm,sig_fig as sf,rf_active_tools as rf
 from math import pi
 print('Enter operating frequency in MHz.')
 _str_in=input('f: ')
-_f=eval(_str_in)*1000000.0
+_f=eval(_str_in)*1e6
 print('\nEnter S parameters as linear magnitude and')
 print('phase in degrees separated by comma with no')
 print('spaces. If a single value is entered')

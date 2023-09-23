@@ -28,7 +28,7 @@ def _round_sci(x,n=5,unit=''):
 		if K>9:A[G]-=10;A[G-1]+=1
 		G-=1
 	if A[0]>9:D+=1;A[0]-=10;A=[1]+A
-	A=A[:n];B=''.join([str(B)for B in A]);E=B[:1];F=B[1:]
+	A=A[:n];B=''.join([str(A)for A in A]);E=B[:1];F=B[1:]
 	if D==0:return E+'.'+F+C
 	elif D==1:return E+'.'+F+'×10'+C
 	else:return E+'.'+F+'×10^'+str(D)+C
@@ -73,7 +73,7 @@ def _round_eng(x,n=5,unit=''):
 	G=3*mt.floor(mt.log10(x)/3);K=x/10**G;C,H=str(K).split('.');E=len(C);A=C+H
 	if len(A)==n:return C+'.'+H+_si_prefix[G]+D
 	elif len(A)<n:A+=(n-len(A)+1)*'0'
-	B=[int(B)for B in A];L=B[n-1];I=B[n]
+	B=[int(A)for A in A];L=B[n-1];I=B[n]
 	if I>5:B[n-1]+=1
 	elif I==5:
 		if set(B[n:]).intersection(set([1,2,3,4,5,6,7,8,9])):B[n-1]+=1
