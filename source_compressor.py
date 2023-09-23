@@ -31,21 +31,13 @@ print("————————————————————|————
 for file_name in os.listdir("Source"):
     if file_name.endswith(".py"):
         source_path = "Source\\"+file_name
-        source_file = open(source_path, "r")
-        source = source_file.read()
-        source_file.close()
-
-        if "optmize_ram" in source:
-            optmize_ram = True
-        else:
-            optmize_ram = False
-
+        with open(source_path, "r") as source_file:
+            source = source_file.read()
+        optmize_ram = "optmize_ram" in source
         minified_path = "Minified\\"+file_name
         minified_source = numworks_minify(source, file_name, optmize_ram)
-        minified_file = open(minified_path, "w")
-        minified_file.write(minified_source)
-        minified_file.close()
-
+        with open(minified_path, "w") as minified_file:
+            minified_file.write(minified_source)
         source_size = os.path.getsize(source_path)
         minified_size = os.path.getsize(minified_path)
         reduction = round(abs((minified_size-source_size)/source_size)*100)
