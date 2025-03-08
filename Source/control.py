@@ -77,7 +77,7 @@ def H(f: float) -> None:
 
 def _is_equal(z1: complex, z2: complex, n: int = 5) -> bool:
     """
-    Verify if two complex numbers are equal up to a given tolerance. Returns true if both real and imaginary parts are withing tolerance and/or both magnitude and phase are withing tolerance. To check if any 2 numbers are withing tolerance, truncates both values up to n significant figures and check if they are equal.
+    Verify if two complex numbers are equal up to a given tolerance. Returns true if both real and imaginary parts are within tolerance and/or both magnitude and phase are within tolerance. To check if any 2 numbers are within tolerance, truncates both values up to n significant figures and check if they are equal.
 
     Args:
         z1 (complex): First complex number.
